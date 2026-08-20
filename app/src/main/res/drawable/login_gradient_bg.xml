@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base gradient -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="160"
+                android:startColor="@color/login_gradient_start"
+                android:centerColor="@color/login_gradient_center"
+                android:endColor="@color/login_gradient_end"
+                android:type="linear" />
+        </shape>
+    </item>
+    <!-- Overlay: subtle radial glow from top-right -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="0.8"
+                android:centerY="0.15"
+                android:gradientRadius="600dp"
+                android:startColor="@color/gradient_glow_1"
+                android:endColor="#00000000"
+                android:type="radial" />
+        </shape>
+    </item>
+    <!-- Overlay: cyan/teal accent glow from bottom-left -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="0.15"
+                android:centerY="0.85"
+                android:gradientRadius="500dp"
+                android:startColor="@color/gradient_glow_2"
+                android:endColor="#00000000"
+                android:type="radial" />
+        </shape>
+    </item>
+</layer-list>

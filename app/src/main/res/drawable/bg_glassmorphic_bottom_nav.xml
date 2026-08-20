@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Semi-transparent card background -->
+    <solid android:color="@color/bottom_nav_bg" />
+    <!-- Fine border around the navigation bar -->
+    <stroke
+        android:width="1.2dp"
+        android:color="@color/bottom_nav_border" />
+    <!-- High corner radius for a modern floating look -->
+    <corners android:radius="24dp" />
+</shape>

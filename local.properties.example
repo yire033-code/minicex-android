@@ -1,0 +1,5 @@
+# Copia estas variables a local.properties. No confirmes local.properties en Git.
+# Android Studio también agrega sdk.dir automáticamente.
+
+MINICEX_API_BASE_URL=https://api.example.com/minicex/api/
+MINICEX_API_HOST=api.example.com

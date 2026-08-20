@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#818CF8</color>
+    <color name="primary_variant">#4F46E5</color>
+    <color name="on_primary">#0F172A</color>
+    <color name="secondary">#22D3EE</color>
+    <color name="secondary_variant">#06B6D4</color>
+    <color name="on_secondary">#0F172A</color>
+    <color name="background">#0F172A</color>
+    <color name="surface">#1E293B</color>
+    <color name="on_surface">#F1F5F9</color>
+    <color name="error">#FB7185</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="divider">#334155</color>
+
+    <color name="accent_soft">#312E81</color> <!-- Deep Indigo for dark mode accents -->
+
+    <color name="status_unsatisfactory">#FB7185</color>
+    <color name="status_satisfactory">#FBBF24</color>
+    <color name="status_superior">#34D399</color>
+
+    <!-- Login premium palette (dark mode) -->
+    <color name="login_gradient_start">#1E1B4B</color>
+    <color name="login_gradient_center">#312E81</color>
+    <color name="login_gradient_end">#0F172A</color>
+    <color name="login_card_surface">#B3121A2E</color>
+    <color name="login_card_border">#1AFFFFFF</color>
+    <color name="login_input_bg">#1A818CF8</color>
+    <color name="login_text_primary">#F1F5F9</color>
+    <color name="login_text_secondary">#94A3B8</color>
+    <color name="login_accent_glow">#818CF8</color>
+    <color name="login_btn_start">#6366F1</color>
+    <color name="login_btn_end">#8B5CF6</color>
+    <color name="login_online">#34D399</color>
+    <color name="login_offline">#FB7185</color>
+
+    <!-- Shared semantic colors (DayNight - Dark Mode) -->
+    <color name="gradient_start">#1E1B4B</color>
+    <color name="gradient_center">#312E81</color>
+    <color name="gradient_end">#0F172A</color>
+    <color name="gradient_glow_1">#40818CF8</color>
+    <color name="gradient_glow_2">#3006B6D4</color>
+    <color name="card_bg">#B3121A2E</color>
+    <color name="card_border">#1AFFFFFF</color>
+    <color name="app_input_bg">#1A818CF8</color>
+    <color name="toolbar_bg">#801E1B4B</color>
+    <color name="toolbar_border">#1AFFFFFF</color>
+    <color name="bottom_nav_bg">#99121A2E</color>
+    <color name="bottom_nav_border">#1AFFFFFF</color>
+    <color name="bottom_nav_active">#818CF8</color>
+    <color name="bottom_nav_inactive">#94A3B8</color>
+
+    <!-- Connection status pill colors (dark theme) -->
+    <color name="pill_bg">#26FFFFFF</color> <!-- 15% opacity White -->
+    <color name="pill_border">#4DFFFFFF</color> <!-- 30% opacity White -->
+    <color name="pill_text">#FFFFFF</color> <!-- White text -->
+</resources>

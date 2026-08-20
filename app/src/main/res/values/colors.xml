@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#4F46E5</color>
+    <color name="primary_variant">#3730A3</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="secondary">#06B6D4</color>
+    <color name="secondary_variant">#0891B2</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="background">#F1F5F9</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_surface">#0F172A</color>
+    <color name="error">#EF4444</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="divider">#E2E8F0</color>
+
+    <color name="accent_soft">#EEF2FF</color>
+
+    <color name="status_unsatisfactory">#EF4444</color>
+    <color name="status_satisfactory">#F59E0B</color>
+    <color name="status_superior">#10B981</color>
+
+    <!-- Essential colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Login premium palette -->
+    <color name="login_gradient_start">#EEF2FF</color>
+    <color name="login_gradient_center">#F1F5F9</color>
+    <color name="login_gradient_end">#E0F2FE</color>
+    <color name="login_card_surface">#E6FFFFFF</color>
+    <color name="login_card_border">#1D4F46E5</color>
+    <color name="login_input_bg">#0A4F46E5</color>
+    <color name="login_text_primary">#0F172A</color>
+    <color name="login_text_secondary">#64748B</color>
+    <color name="login_accent_glow">#4F46E5</color>
+    <color name="login_btn_start">#4F46E5</color>
+    <color name="login_btn_end">#3730A3</color>
+    <color name="login_online">#10B981</color>
+    <color name="login_offline">#EF4444</color>
+
+    <!-- Shared semantic colors (DayNight) -->
+    <color name="gradient_start">#EEF2FF</color>
+    <color name="gradient_center">#F1F5F9</color>
+    <color name="gradient_end">#E0F2FE</color>
+    <color name="gradient_glow_1">#20818CF8</color>
+    <color name="gradient_glow_2">#1506B6D4</color>
+    <color name="card_bg">#E6FFFFFF</color>
+    <color name="card_border">#1D4F46E5</color>
+    <color name="app_input_bg">#0A4F46E5</color>
+    <color name="toolbar_bg">#80FFFFFF</color>
+    <color name="toolbar_border">#1A4F46E5</color>
+    <color name="bottom_nav_bg">#99FFFFFF</color>
+    <color name="bottom_nav_border">#1D4F46E5</color>
+    <color name="bottom_nav_active">#4F46E5</color>
+    <color name="bottom_nav_inactive">#64748B</color>
+
+    <!-- Connection status pill colors (light theme) -->
+    <color name="pill_bg">#104F46E5</color> <!-- 6.25% opacity Indigo -->
+    <color name="pill_border">#204F46E5</color> <!-- 12.5% opacity Indigo -->
+    <color name="pill_text">#4F46E5</color> <!-- Indigo text -->
+</resources>

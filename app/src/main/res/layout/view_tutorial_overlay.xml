@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Full-screen dim with transparent rectangular cutout -->
+    <com.example.minicex.ui.utils.TutorialDimView
+        android:id="@+id/tutorialDimView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Tutorial info card — floats at the bottom -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/tutorialCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="28dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="20dp"
+        app:cardBackgroundColor="@color/card_bg"
+        app:strokeColor="@color/primary"
+        app:strokeWidth="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="22dp">
+
+            <!-- Header: step counter + skip button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/tvTutorialStep"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="INICIO  •  1/23"
+                    android:textColor="@color/primary"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTutorialSkip"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Salir"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="0dp" />
+
+            </LinearLayout>
+
+            <!-- Progress bar -->
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/pbTutorialProgress"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:max="23"
+                android:progress="1"
+                android:layout_marginBottom="18dp"
+                app:indicatorColor="@color/primary"
+                app:trackColor="@color/divider"
+                app:trackCornerRadius="3dp" />
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvTutorialTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Título del Paso"
+                android:textColor="@color/on_surface"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/tvTutorialDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Descripción del paso que guía al usuario."
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:lineSpacingMultiplier="1.35"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Next button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTutorialNext"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="Continuar"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/primary"
+                app:cornerRadius="14dp" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</FrameLayout>

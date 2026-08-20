@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0a1128">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarViewer"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#0a1128"
+        app:titleTextColor="#E2E8F0"
+        app:subtitleTextColor="#64748B"
+        app:navigationIcon="@drawable/ic_close"
+        app:title="Reporte por Docente" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <WebView
+                android:id="@+id/webViewXls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="400dp" />
+
+            <TextView
+                android:id="@+id/tvRotateHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="🔄 Gira el dispositivo para ver en horizontal"
+                android:textColor="#64748B"
+                android:textSize="13sp"
+                android:visibility="visible" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#0F172A"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDownloadXls"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="Descargar .xlsx"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:icon="@drawable/ic_download"
+            app:iconTint="@color/primary"
+            app:strokeColor="@color/primary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCloseViewer"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="Cerrar"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="#4F46E5" />
+    </LinearLayout>
+
+</LinearLayout>

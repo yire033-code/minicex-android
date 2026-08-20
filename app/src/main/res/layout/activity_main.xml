@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Wrap the DrawerLayout with FrameLayout to use the same View type for the same view ID
+across the layout configurations
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_gradient_bg">
+
+    <!-- Background Orbs -->
+    <View
+        android:id="@+id/main_orb1"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_gravity="top|end"
+        android:layout_marginEnd="-80dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/login_bg_orb_1"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/main_orb2"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="-60dp"
+        android:layout_marginBottom="120dp"
+        android:background="@drawable/login_bg_orb_2"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/main_orb3"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/login_bg_orb_3"
+        android:visibility="gone" />
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <include
+            android:id="@+id/app_bar_main"
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+</FrameLayout>

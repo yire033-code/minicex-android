@@ -1,0 +1,35 @@
+*.iml
+.gradle/
+.kotlin/
+.idea/
+local.properties
+!local.properties.example
+.DS_Store
+**/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+
+# Repositorios y artefactos que no pertenecen al cliente Android
+/ios/
+/minicex/
+/.agents/
+/.codex/
+/AGENTS.md
+/taskLog
+/Untitled-1.txt
+/logo.png
+/*.sql
+bd_update.txt
+/*.rar
+*.pdf
+*.docx
+
+# Firmas y servicios locales
+*.jks
+*.keystore
+keystore.properties
+google-services.json
+*.env
+*.env.*
+!*.env.example

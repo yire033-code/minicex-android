@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loginRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <!-- ═══════════════════════════════════════════════════════
+         LAYER 0: Full-screen premium gradient background
+         ═══════════════════════════════════════════════════════ -->
+    <View
+        android:id="@+id/gradientBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/login_gradient_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         LAYER 1: Floating orbs for aurora/depth effect
+         ═══════════════════════════════════════════════════════ -->
+    <View
+        android:id="@+id/orb1"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/login_bg_orb_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="-80dp"
+        android:layout_marginTop="20dp" />
+
+    <View
+        android:id="@+id/orb2"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@drawable/login_bg_orb_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="-60dp"
+        android:layout_marginBottom="60dp" />
+
+    <View
+        android:id="@+id/orb3"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@drawable/login_bg_orb_3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="100dp" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         LAYER 2: Connection status chip (glassmorphic)
+         ═══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/statusChip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_status_chip_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="6dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/statusDot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/bg_dot_indicator" />
+
+        <TextView
+            android:id="@+id/tvStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/login_text_secondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.03"
+            tools:text="En línea" />
+    </LinearLayout>
+
+    <!-- Vertical guideline for side-by-side layout -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.42" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         LAYER 3: Left side - Branding
+         ═══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/brandingContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:contentDescription="Logo Mini-CEX"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:letterSpacing="0.08"
+            android:text="Mini-CEX"
+            android:textColor="@color/login_text_primary"
+            android:textSize="44sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:id="@+id/tvTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0.12"
+            android:text="EVALUACIÓN CLÍNICA ESTRUCTURADA"
+            android:textColor="@color/login_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════════
+         LAYER 4: Right side - Glassmorphic form card
+         ═══════════════════════════════════════════════════════ -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineVertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="48dp">
+
+            <LinearLayout
+                android:id="@+id/formContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/login_card_bg"
+                android:orientation="vertical"
+                android:paddingHorizontal="36dp"
+                android:paddingTop="40dp"
+                android:paddingBottom="36dp"
+                android:elevation="16dp">
+
+                <TextView
+                    android:id="@+id/tvLoginTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bienvenido"
+                    android:textColor="@color/login_text_primary"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
+
+                <TextView
+                    android:id="@+id/tvLoginSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="36dp"
+                    android:text="Acceso exclusivo para evaluadores"
+                    android:textColor="@color/login_text_secondary"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilEmail"
+                    style="@style/Widget.App.TextInputLayout.Login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:hint="Correo electrónico"
+                    app:startIconDrawable="@drawable/ic_email_outline">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/login_text_primary"
+                        android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPassword"
+                    style="@style/Widget.App.TextInputLayout.Login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="36dp"
+                    android:hint="Contraseña"
+                    app:endIconMode="password_toggle"
+                    app:startIconDrawable="@drawable/ic_lock_outline">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:textColor="@color/login_text_primary"
+                        android:textSize="16sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <FrameLayout
+                    android:id="@+id/btnLoginContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="8dp">
+
+                    <Button
+                        android:id="@+id/btnLogin"
+                        style="@style/Widget.App.Button.Login"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Iniciar Sesión" />
+
+                    <ProgressBar
+                        android:id="@+id/loginProgress"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="@color/white"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvHelpLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="24dp"
+                    android:paddingVertical="8dp"
+                    android:text="¿Necesitas ayuda con tu acceso?"
+                    android:textColor="@color/login_accent_glow"
+                    android:textSize="14sp"
+                    android:letterSpacing="0.02" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
