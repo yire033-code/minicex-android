@@ -12,7 +12,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:paddingHorizontal="20dp"
+    android:paddingTop="28dp"
+    android:paddingBottom="24dp">
 
     <!-- Header Section -->
     <TextView
@@ -21,17 +23,17 @@
         android:layout_height="wrap_content"
         android:text="Ajustes de Perfil"
         android:textColor="@color/on_surface"
-        android:textSize="32sp"
-        android:fontFamily="sans-serif-condensed-medium"
+        android:textSize="30sp"
+        android:fontFamily="sans-serif-medium"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="18dp" />
 
     <!-- User Information Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
         app:cardBackgroundColor="@color/card_bg"
         app:strokeColor="@color/card_border"
         app:strokeWidth="1dp"
@@ -41,14 +43,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="26dp">
 
             <!-- Avatar Circle -->
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="78dp"
+                android:layout_height="78dp"
                 android:layout_gravity="center_horizontal"
-                app:cardCornerRadius="36dp"
+                app:cardCornerRadius="39dp"
                 app:cardBackgroundColor="@color/primary"
                 app:strokeWidth="0dp"
                 android:layout_marginBottom="16dp">
@@ -59,7 +61,7 @@
                     android:gravity="center"
                     android:text="D"
                     android:textColor="@android:color/white"
-                    android:textSize="30sp"
+                    android:textSize="32sp"
                     android:textStyle="bold" />
             </com.google.android.material.card.MaterialCardView>
 
@@ -69,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:text="Nombre del Docente"
                 android:textColor="@color/on_surface"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:layout_marginBottom="4dp"/>
@@ -97,6 +99,76 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Security Section -->
+    <TextView
+        android:id="@+id/tvSecurityHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seguridad y Acceso"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:textAllCaps="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="10dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardBiometric"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/card_border"
+        app:cardBackgroundColor="@color/card_bg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp">
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_fingerprint"
+                app:tint="@color/primary"
+                android:contentDescription="Huella digital" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Desbloqueo biométrico"
+                    android:textColor="@color/on_surface"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvBiometricSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Solicitar huella al abrir la app"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchBiometric"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
     <!-- Actions Section -->
     <TextView
         android:layout_width="wrap_content"
@@ -107,28 +179,29 @@
         android:textStyle="bold"
         android:letterSpacing="0.05"
         android:textAllCaps="true"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="10dp" />
 
     <!-- Manual Sync Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnManualSync"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="58dp"
         android:text="Sincronizar Datos Ahora"
         app:icon="@drawable/ic_sync"
-        app:cornerRadius="16dp"
-        android:layout_marginBottom="16dp"
+        app:cornerRadius="18dp"
+        android:layout_marginBottom="12dp"
         app:strokeColor="@color/primary"/>
 
     <!-- Logout Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="58dp"
         android:text="Cerrar Sesión"
         app:icon="@drawable/ic_logout"
-        app:cornerRadius="16dp"
+        app:cornerRadius="18dp"
         app:backgroundTint="#EF4444"
         android:textColor="@android:color/white"/>
 

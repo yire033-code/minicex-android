@@ -6,5 +6,5 @@
         android:startColor="@color/login_btn_start"
         android:endColor="@color/login_btn_end"
         android:type="linear" />
-    <corners android:radius="16dp" />
+    <corners android:radius="18dp" />
 </shape>

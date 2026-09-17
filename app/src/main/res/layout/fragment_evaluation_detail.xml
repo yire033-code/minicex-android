@@ -36,8 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/card_bg"
                 app:strokeColor="@color/card_border"
                 app:strokeWidth="1dp">
@@ -147,8 +147,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/card_bg"
                 app:strokeColor="@color/card_border"
                 app:strokeWidth="1dp">
@@ -194,8 +194,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/card_bg"
                 app:strokeColor="@color/card_border"
                 app:strokeWidth="1dp">

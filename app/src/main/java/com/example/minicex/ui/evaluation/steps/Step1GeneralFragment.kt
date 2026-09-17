@@ -134,6 +134,11 @@ class Step1GeneralFragment : Fragment() {
                 .show()
         }
 
+        if (arguments?.getBoolean("open_student_registration") == true) {
+            arguments?.putBoolean("open_student_registration", false)
+            binding.btnAddStudent.post { binding.btnAddStudent.performClick() }
+        }
+
         // Setup other spinners
         val settings = arrayOf("Ambulatorio", "Intra hospitalario", "Otros")
         val patientTypes = arrayOf("Nuevo", "Subsecuente")

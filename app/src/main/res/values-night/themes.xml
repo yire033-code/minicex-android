@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Minicex" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Minicex" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
@@ -19,7 +19,7 @@
         <!-- Display Cutout (Notch) Support -->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="p">shortEdges</item>
         <!-- Background and Surface -->
-        <item name="android:windowBackground">@color/background</item>
+        <item name="android:windowBackground">@drawable/app_gradient_bg</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/on_surface</item>
         

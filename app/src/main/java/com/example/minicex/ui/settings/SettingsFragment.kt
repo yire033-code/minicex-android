@@ -16,6 +16,7 @@ import com.example.minicex.data.local.AppDatabase
 import com.example.minicex.data.remote.RetrofitClient
 import com.example.minicex.data.repository.SyncRepository
 import com.example.minicex.databinding.FragmentSettingsBinding
+import com.example.minicex.utils.BiometricHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -100,10 +101,31 @@ class SettingsFragment : Fragment() {
             findNavController().navigate(R.id.nav_login)
         }
 
+        // Biometric Security Toggle
+        val isHardwareAvailable = BiometricHelper.isBiometricAvailable(requireContext())
+        if (isHardwareAvailable) {
+            binding.cardBiometric.visibility = View.VISIBLE
+            binding.tvSecurityHeader.visibility = View.VISIBLE
+            binding.switchBiometric.isChecked = BiometricHelper.isBiometricEnabled(requireContext())
+
+            binding.switchBiometric.setOnCheckedChangeListener { _, isChecked ->
+                BiometricHelper.setBiometricEnabled(requireContext(), isChecked)
+                if (isChecked) {
+                    showSuccess("Desbloqueo biométrico activado")
+                } else {
+                    showInfo("Desbloqueo biométrico desactivado")
+                }
+            }
+        } else {
+            binding.cardBiometric.visibility = View.GONE
+            binding.tvSecurityHeader.visibility = View.GONE
+        }
+
         // Entrance animation
         val profileCard = binding.tvUserName.parent.parent as? View
         val animatedViews = listOfNotNull(
             binding.tvSettingsTitle, profileCard,
+            binding.tvSecurityHeader, binding.cardBiometric,
             binding.btnManualSync, binding.btnLogout, binding.textSettings
         )
         animatedViews.forEachIndexed { index, v ->

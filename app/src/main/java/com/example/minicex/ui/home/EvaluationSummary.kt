@@ -4,5 +4,6 @@ data class EvaluationSummary(
     val id: Int,
     val studentName: String,
     val date: String,
-    val score: Double
+    val score: Double,
+    val isSynced: Boolean,
 )

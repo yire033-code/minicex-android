@@ -6,7 +6,7 @@
         android:gradientRadius="100dp"
         android:centerX="0.5"
         android:centerY="0.5"
-        android:startColor="#3322D3EE"
+        android:startColor="#3371C7EF"
         android:endColor="#00000000" />
     <size
         android:width="200dp"

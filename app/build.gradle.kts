@@ -29,18 +29,18 @@ android {
         applicationId = "com.example.minicex"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0"
 
         buildConfigField(
             "String",
             "MINICEX_API_BASE_URL",
-            quotedBuildConfig(minicexConfig("MINICEX_API_BASE_URL", "https://api.example.invalid/minicex/api/"))
+            quotedBuildConfig(minicexConfig("MINICEX_API_BASE_URL", "https://minicex.copacee-ges21.mx/api/"))
         )
         buildConfigField(
             "String",
             "MINICEX_API_HOST",
-            quotedBuildConfig(minicexConfig("MINICEX_API_HOST", "api.example.invalid"))
+            quotedBuildConfig(minicexConfig("MINICEX_API_HOST", "minicex.copacee-ges21.mx"))
         )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -84,6 +84,9 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+
+    // Biometric authentication
+    implementation("androidx.biometric:biometric:1.1.0")
 
     // Room components
     val room_version = "2.6.1"

@@ -16,6 +16,7 @@ data class SyncResponse(
 
 data class StudentDto(
     val id_alumno: Int,
+    val uuid: String,
     val matricula: String,
     val nombre_completo: String,
     val semestre_grupo: String,
@@ -48,6 +49,7 @@ data class LoginRequest(
 
 data class LoginUser(
     val id_usuario: Int,
+    val uuid: String?,
     val nombre_completo: String,
     val email: String,
     val rol: String
@@ -163,6 +165,7 @@ data class StudentReportResponse(
 
 data class TeacherSummaryDocente(
     val idUsuario: Int,
+    val uuid: String?,
     val nombreCompleto: String,
     val email: String
 )
@@ -191,6 +194,7 @@ data class StudentSummaryIndices(
 
 data class StudentSummaryItem(
     val idAlumno: Int,
+    val uuid: String,
     val matricula: String,
     val nombreCompleto: String,
     val semestreGrupo: String,
@@ -208,5 +212,3 @@ data class TeacherSummaryResponse(
     val resumen: TeacherSummaryResumen?,
     val alumnos: List<StudentSummaryItem>?
 )
-
-

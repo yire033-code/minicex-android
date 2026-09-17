@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.minicex.data.local.AppDatabase
 import com.example.minicex.data.remote.RetrofitClient
 import com.example.minicex.data.repository.SyncRepository
+import com.example.minicex.utils.UpdateManager
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -83,13 +84,13 @@ class MainActivity : AppCompatActivity() {
         // Iniciar Sincronización Automática al arrancar
         initAutoSync()
 
+        // Verificar actualizaciones
+        val updateManager = UpdateManager(this, lifecycleScope)
+        updateManager.checkForUpdates()
+
         val navHostFragment =
             (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment?)!!
         val navController = navHostFragment.navController
-
-        binding.appBarMain.fab?.setOnClickListener { view ->
-            navController.navigate(R.id.nav_evaluation)
-        }
 
         binding.navView?.let {
             appBarConfiguration = AppBarConfiguration(
@@ -105,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         binding.appBarMain.contentMain.bottomNavView?.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.nav_home, R.id.nav_evaluation, R.id.nav_reports
+                    R.id.nav_home, R.id.nav_evaluation, R.id.nav_reports, R.id.nav_settings
                 )
             )
             setupActionBarWithNavController(navController, appBarConfiguration)
@@ -118,10 +119,16 @@ class MainActivity : AppCompatActivity() {
                 destination.id == R.id.nav_results ||
                 destination.id == R.id.nav_evaluation_detail
 
+            binding.appBarMain.toolbarTitle.text = when (destination.id) {
+                R.id.nav_home -> "Inicio"
+                R.id.nav_reports -> "Reportes"
+                R.id.nav_settings -> "Ajustes"
+                else -> "Mini-CEX"
+            }
+
             if (isLogin) {
                 supportActionBar?.hide()
                 binding.navView?.visibility = View.GONE
-                binding.appBarMain.fab?.hide()
                 binding.appBarMain.contentMain.bottomNavView?.visibility = View.GONE
                 
                 binding.mainOrb1?.visibility = View.GONE
@@ -132,11 +139,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 if (isFocusedFlow) supportActionBar?.hide() else supportActionBar?.show()
                 binding.navView?.visibility = View.VISIBLE
-                if (destination.id == R.id.nav_home) {
-                    binding.appBarMain.fab?.show()
-                } else {
-                    binding.appBarMain.fab?.hide()
-                }
                 binding.appBarMain.contentMain.bottomNavView?.visibility =
                     if (isFocusedFlow) View.GONE else View.VISIBLE
                 

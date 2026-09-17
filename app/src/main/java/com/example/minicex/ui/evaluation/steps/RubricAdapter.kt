@@ -132,6 +132,9 @@ class RubricAdapter(
             this.setChipBackgroundColorResource(bgColorRes)
             this.setTextColor(ContextCompat.getColorStateList(context, R.color.chip_score_text))
             this.chipStrokeWidth = 0f
+            this.shapeAppearanceModel = this.shapeAppearanceModel.toBuilder()
+                .setAllCornerSizes(14 * context.resources.displayMetrics.density)
+                .build()
             this.chipStartPadding = 0f
             this.chipEndPadding = 0f
             this.textStartPadding = 0f

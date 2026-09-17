@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:text="Revisión y envío"
             android:textColor="@color/on_surface"
-            android:textSize="22sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardBackgroundColor="@color/card_bg"
-            app:cardCornerRadius="22dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeColor="@color/card_border"
             app:strokeWidth="1dp">
@@ -138,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             app:cardBackgroundColor="@color/accent_soft"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp">
 
             <LinearLayout

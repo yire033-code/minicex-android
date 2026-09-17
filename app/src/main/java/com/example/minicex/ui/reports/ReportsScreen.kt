@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.example.minicex.XlsViewerActivity
 import com.example.minicex.ui.theme.LocalAppColors
+import com.example.minicex.utils.FileExporter
 import com.example.minicex.data.local.AppDatabase
 import com.example.minicex.data.local.entity.StudentEntity
 import com.example.minicex.data.remote.RetrofitClient
@@ -42,8 +43,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,6 +50,7 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("UNUSED_PARAMETER")
 fun ReportsScreen(
     fragmentActivity: FragmentActivity,
     onShowError: (String) -> Unit,
@@ -62,6 +62,7 @@ fun ReportsScreen(
 
     // State
     var evaluadorId by remember { mutableIntStateOf(-1) }
+    var evaluadorEmail by remember { mutableStateOf("") }
     var students by remember { mutableStateOf<List<StudentEntity>>(emptyList()) }
     var currentReport by remember { mutableStateOf<StudentReportResponse?>(null) }
     var isTeacherMode by remember { mutableStateOf(false) }
@@ -76,6 +77,7 @@ fun ReportsScreen(
     LaunchedEffect(Unit) {
         val prefs = ctx.getSharedPreferences("minicex_prefs", Context.MODE_PRIVATE)
         evaluadorId = prefs.getInt("evaluador_id", -1)
+        evaluadorEmail = prefs.getString("evaluador_email", "") ?: ""
         isOnline = isOnline(ctx)
             loadStudents(ctx, scope, evaluadorId) { students = it }
     }
@@ -164,13 +166,16 @@ fun ReportsScreen(
                             ctx.startActivity(Intent(ctx, XlsViewerActivity::class.java).apply {
                                 putExtra("data_type", "teacher_summary")
                                 putExtra("teacher_summary_json", json)
-                                putExtra("evaluador_id", evaluadorId)
+                                putExtra("evaluador_email", evaluadorEmail)
                                 putExtra("modo", currentModo)
                             })
                         }
                     },
                     onDownloadXlsx = {
-                        downloadXlsx(ctx, scope, "${baseUrl(ctx)}/reports/teacher-summary/download-xlsx?evaluador_id=$evaluadorId&modo=$currentModo", "ReporteDocente", onShowError, onShowSuccess)
+                        downloadTeacherXlsx(ctx, scope, evaluadorEmail, currentModo, onShowError, onShowSuccess)
+                    },
+                    onDownloadCsv = {
+                        downloadTeacherCsv(ctx, scope, evaluadorEmail, currentModo, onShowError, onShowSuccess)
                     },
                 )
 
@@ -262,14 +267,14 @@ fun ReportsScreen(
                             ctx.startActivity(Intent(ctx, XlsViewerActivity::class.java).apply {
                                 putExtra("data_type", "student_report")
                                 putExtra("student_report_json", json)
-                                putExtra("evaluador_id", evaluadorId)
-                                putExtra("student_id", report.student?.idAlumno ?: -1)
+                                putExtra("evaluador_email", evaluadorEmail)
+                                putExtra("student_uuid", report.student?.uuid)
                             })
                         },
                         onDownloadXlsx = {
-                            val sid = report.student?.idAlumno
-                            if (sid != null) {
-                                downloadXlsx(ctx, scope, "${baseUrl(ctx)}/reports/student/download-xlsx?student_id=$sid", "ReporteAlumno", onShowError, onShowSuccess)
+                            val uuid = report.student?.uuid
+                            if (uuid != null) {
+                                downloadStudentXlsx(ctx, scope, uuid, onShowError, onShowSuccess)
                             }
                         },
                     )
@@ -280,8 +285,6 @@ fun ReportsScreen(
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
-
-private fun baseUrl(ctx: Context) = RetrofitClient.BASE_URL.trimEnd('/')
 
 private fun isOnline(ctx: Context): Boolean {
     val cm = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -332,25 +335,50 @@ private fun loadTeacherSummary(ctx: Context, scope: CoroutineScope, evaluadorId:
     }
 }
 
-private fun downloadXlsx(ctx: Context, scope: CoroutineScope, url: String, prefix: String, onError: (String) -> Unit, onSuccess: (String) -> Unit) {
+private fun downloadStudentXlsx(ctx: Context, scope: CoroutineScope, uuid: String, onError: (String) -> Unit, onSuccess: (String) -> Unit) {
+    exportFile(ctx, scope, "ReporteAlumno_${timestamp()}.xlsx", FileExporter.MIME_XLSX,
+        { RetrofitClient.instance.downloadStudentXlsx(uuid) }, onError, onSuccess)
+}
+
+private fun downloadTeacherXlsx(ctx: Context, scope: CoroutineScope, email: String, modo: String, onError: (String) -> Unit, onSuccess: (String) -> Unit) {
+    exportFile(ctx, scope, "ReporteDocente_${timestamp()}.xlsx", FileExporter.MIME_XLSX,
+        { RetrofitClient.instance.downloadTeacherSummaryXlsx(email, modo) }, onError, onSuccess)
+}
+
+private fun downloadTeacherCsv(ctx: Context, scope: CoroutineScope, email: String, modo: String, onError: (String) -> Unit, onSuccess: (String) -> Unit) {
+    exportFile(ctx, scope, "ResumenDocente_${timestamp()}.csv", FileExporter.MIME_CSV,
+        { RetrofitClient.instance.downloadTeacherSummaryCsv(email, modo) }, onError, onSuccess)
+}
+
+private fun timestamp() = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+
+private fun exportFile(
+    ctx: Context,
+    scope: CoroutineScope,
+    fileName: String,
+    mimeType: String,
+    request: suspend () -> retrofit2.Response<okhttp3.ResponseBody>,
+    onError: (String) -> Unit,
+    onSuccess: (String) -> Unit,
+) {
     Toast.makeText(ctx, "Descargando…", Toast.LENGTH_SHORT).show()
     scope.launch(Dispatchers.IO) {
         try {
-            val client = okhttp3.OkHttpClient.Builder()
-                .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-                .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)
-                .build()
-            val req = okhttp3.Request.Builder().url(url).build()
-            val resp = client.newCall(req).execute()
-            val bytes = resp.body?.bytes()
-            if (bytes != null && bytes.isNotEmpty()) {
-                val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-                val dir = ctx.getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS)
-                val file = File(dir, "${prefix}_${sdf.format(Date())}.xlsx")
-                FileOutputStream(file).use { it.write(bytes) }
-                withContext(Dispatchers.Main) { onSuccess("Archivo guardado: ${file.name}") }
+            val response = request()
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    val saved = FileExporter.saveAndOpen(ctx, body.bytes(), fileName, mimeType)
+                    withContext(Dispatchers.Main) {
+                        if (saved != null) onSuccess("Archivo guardado: ${saved.name}")
+                    }
+                } else {
+                    withContext(Dispatchers.Main) { onError("Respuesta vacía del servidor") }
+                }
             } else {
-                withContext(Dispatchers.Main) { onError("Respuesta vacía") }
+                withContext(Dispatchers.Main) {
+                    onError("Error: " + FileExporter.serverMessage(response.errorBody(), "No se pudo descargar el archivo"))
+                }
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { onError("Error: ${e.message}") }
@@ -466,6 +494,7 @@ fun TeacherSummaryHeader(
     onModoChange: () -> Unit,
     onOpenViewer: () -> Unit,
     onDownloadXlsx: () -> Unit,
+    onDownloadCsv: () -> Unit,
 ) {
     Card(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -522,6 +551,12 @@ fun TeacherSummaryHeader(
                     Spacer(Modifier.width(4.dp))
                     Text("Descargar .xlsx", color = MaterialTheme.colorScheme.primary, fontSize = 11.sp)
                 }
+            }
+
+            TextButton(onClick = onDownloadCsv, modifier = Modifier.align(Alignment.End)) {
+                Icon(Icons.Default.TableChart, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("Descargar resumen en CSV", color = MaterialTheme.colorScheme.primary, fontSize = 11.sp)
             }
         }
     }
@@ -1107,7 +1142,12 @@ fun IndexCard(label: String, value: String, valueColor: Color, modifier: Modifie
         modifier = modifier
     ) {
         Column(Modifier.padding(14.dp)) {
-            Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            Text(
+                label,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(Modifier.height(4.dp))
             Text(value, color = valueColor, fontSize = 14.sp, fontWeight = FontWeight.Bold)
         }

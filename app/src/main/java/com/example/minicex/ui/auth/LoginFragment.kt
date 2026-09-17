@@ -28,6 +28,7 @@ import com.example.minicex.data.local.entity.UserEntity
 import com.example.minicex.data.remote.RetrofitClient
 import com.example.minicex.data.remote.dto.LoginRequest
 import com.example.minicex.databinding.FragmentLoginBinding
+import com.example.minicex.utils.BiometricHelper
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
@@ -50,24 +51,56 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Check if user session is already active (Auto-Login / Session Persistence)
-        val prefs = requireContext().getSharedPreferences("minicex_prefs", Context.MODE_PRIVATE)
-        val evaluadorEmail = prefs.getString("evaluador_email", "")
-        if (!evaluadorEmail.isNullOrEmpty()) {
-            findNavController().navigate(R.id.action_login_to_home)
-            return
-        }
-
         setupEdgeToEdge()
         setupConnectionStatus()
-        if (isFirstLaunch) {
-            runSplashEntranceAnimation()
-            isFirstLaunch = false
-        } else {
-            runStandardEntranceAnimation()
-        }
         startOrbAnimations()
         setupLoginButton()
+
+        val prefs = requireContext().getSharedPreferences("minicex_prefs", Context.MODE_PRIVATE)
+        val evaluadorEmail = prefs.getString("evaluador_email", "")
+        val evaluadorNombre = prefs.getString("evaluador_nombre", "")
+
+        val hasActiveSession = !evaluadorEmail.isNullOrEmpty()
+
+        if (hasActiveSession) {
+            // Rellenar correo previo y saludo
+            binding.etEmail.setText(evaluadorEmail)
+            if (!evaluadorNombre.isNullOrBlank()) {
+                binding.tvLoginSubtitle.text = "Hola, $evaluadorNombre"
+            }
+
+            val isBiometricReady = BiometricHelper.isBiometricEnabled(requireContext()) &&
+                BiometricHelper.isBiometricAvailable(requireContext())
+
+            if (isBiometricReady) {
+                // Mostrar botón interactivo para reabrir huella si se cancela el prompt
+                binding.btnBiometricUnlock.visibility = View.VISIBLE
+                binding.btnBiometricUnlock.setOnClickListener {
+                    it.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                    launchBiometricUnlock()
+                }
+
+                runStandardEntranceAnimation()
+
+                // Lanzar automáticamente el diálogo biométrico al abrir la app
+                view.post {
+                    if (isAdded && _binding != null) {
+                        launchBiometricUnlock()
+                    }
+                }
+            } else {
+                // Sin sensor biométrico o desactivado en ajustes -> navegar directamente al inicio
+                findNavController().navigate(R.id.action_login_to_home)
+            }
+        } else {
+            // Primer inicio de sesión: mostrar animación de bienvenida
+            if (isFirstLaunch) {
+                runSplashEntranceAnimation()
+                isFirstLaunch = false
+            } else {
+                runStandardEntranceAnimation()
+            }
+        }
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -414,11 +447,12 @@ class LoginFragment : Fragment() {
                             )
                             db.userDao().insertUser(localUser)
 
-                            // Save credentials in SharedPreferences
+                            // Save credentials in SharedPreferences and enable biometric for subsequent launches
                             prefs.edit()
                                 .putInt("evaluador_id", serverUser.id_usuario)
                                 .putString("evaluador_nombre", serverUser.nombre_completo)
                                 .putString("evaluador_email", serverUser.email)
+                                .putBoolean("biometric_enabled", true)
                                 .apply()
 
                             // Auto-trigger synchronisation immediately
@@ -521,12 +555,39 @@ class LoginFragment : Fragment() {
                 .putInt("evaluador_id", user.idUsuario)
                 .putString("evaluador_nombre", user.nombreCompleto)
                 .putString("evaluador_email", user.email)
+                .putBoolean("biometric_enabled", true)
                 .apply()
 
             onLoginSuccess("Modo sin conexión")
         } else {
             onLoginError("Credenciales incorrectas o usuario no registrado localmente.")
         }
+    }
+
+    private fun launchBiometricUnlock() {
+        if (!isAdded) return
+        val prefs = requireContext().getSharedPreferences("minicex_prefs", Context.MODE_PRIVATE)
+        val nombre = prefs.getString("evaluador_nombre", "Evaluador") ?: "Evaluador"
+
+        BiometricHelper.showBiometricPrompt(
+            fragment = this,
+            title = "Desbloquear Mini-CEX",
+            subtitle = "Hola, $nombre. Confirma tu identidad para continuar.",
+            negativeButtonText = "Usar contraseña",
+            onSuccess = {
+                if (isAdded && _binding != null) {
+                    onLoginSuccess("Huella digital")
+                }
+            },
+            onCancel = {
+                // Usuario canceló o pulsó 'Usar contraseña' -> permanece en pantalla para ingresar password
+            },
+            onError = { error ->
+                if (isAdded && _binding != null) {
+                    showError(error)
+                }
+            }
+        )
     }
 
     // ─────────────────────────────────────────────────────────────

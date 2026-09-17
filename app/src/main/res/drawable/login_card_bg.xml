@@ -8,5 +8,5 @@
         android:width="1dp"
         android:color="@color/login_card_border" />
     <!-- Modern rounded corners -->
-    <corners android:radius="28dp" />
+    <corners android:radius="16dp" />
 </shape>

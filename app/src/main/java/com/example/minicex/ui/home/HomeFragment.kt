@@ -70,10 +70,15 @@ class HomeFragment : Fragment(), WelcomeTutorialDialog.TutorialHost {
         val name = prefs.getString("evaluador_nombre", "Docente")
         val evaluadorEmail = prefs.getString("evaluador_email", "")
         binding.tvWelcome.text = "Hola, $name"
+        binding.tvCurrentDate.text = SimpleDateFormat(
+            "EEEE, d 'de' MMMM",
+            Locale.getDefault(),
+        ).format(Date()).replaceFirstChar { it.titlecase(Locale.getDefault()) }
 
         // Entrance animations
         listOf(
-            binding.tvWelcome, binding.tvDashboardTitle, binding.btnRefreshSync, binding.btnRestartTutorial,
+            binding.tvWelcome, binding.cardPrimaryMetric, binding.btnQuickEvaluation, binding.btnQuickStudent,
+            binding.tvDashboardTitle, binding.btnRefreshSync, binding.btnRestartTutorial,
             binding.cardStatTotal, binding.cardStatAvg, binding.cardStatPending,
             binding.tvRecentLabel
         ).forEachIndexed { idx, v ->
@@ -88,6 +93,19 @@ class HomeFragment : Fragment(), WelcomeTutorialDialog.TutorialHost {
             TutorialManager.setPhase(ctx, TutorialManager.PHASE_NOT_STARTED)
             homeTutorialStarted = false
             checkAndShowTutorial()
+        }
+
+        binding.btnQuickEvaluation.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            findNavController().navigate(R.id.nav_evaluation)
+        }
+
+        binding.btnQuickStudent.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+            findNavController().navigate(
+                R.id.nav_evaluation,
+                Bundle().apply { putBoolean("open_student_registration", true) },
+            )
         }
 
         binding.btnRefreshSync.setOnClickListener { btn ->
@@ -160,7 +178,6 @@ class HomeFragment : Fragment(), WelcomeTutorialDialog.TutorialHost {
         homeTutorialStarted = true
 
         val ctx = requireContext()
-        val fab = requireActivity().findViewById<View>(R.id.fab)
         tutorialOverlay?.dismiss(animated = false)
         tutorialOverlay = TutorialOverlay(requireActivity())
         val overlay = tutorialOverlay!!
@@ -180,7 +197,7 @@ class HomeFragment : Fragment(), WelcomeTutorialDialog.TutorialHost {
             Triple(recentActivityTarget,
                 "Evaluaciones recientes",
                 "Aquí aparecerán solamente tus evaluaciones reales. Toca cualquiera para revisar las competencias, los comentarios y los tiempos del encuentro clínico."),
-            Triple(fab,
+            Triple(binding.btnQuickEvaluation as View,
                 "Crea una evaluación",
                 "Usaremos un alumno de demostración para mostrarte el proceso completo sin afectar tus registros reales.")
         )
@@ -228,9 +245,15 @@ class HomeFragment : Fragment(), WelcomeTutorialDialog.TutorialHost {
                 val realEvaluations = evaluations.filterNot { it.idAlumno in demoStudentIds }
                 val summaryList = realEvaluations.map { eval ->
                     val name = studentMap[eval.idAlumno] ?: "Alumno Desconocido"
-                    val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                         .format(Date(eval.fechaEvaluacion))
-                    EvaluationSummary(eval.idEvaluacion, name, date, eval.calificacionTotal / 10.0)
+                    EvaluationSummary(
+                        eval.idEvaluacion,
+                        name,
+                        date,
+                        eval.calificacionTotal / 10.0,
+                        eval.isSynced,
+                    )
                 }
                 val total = realEvaluations.size
                 val avg = if (realEvaluations.isEmpty()) 0.0
@@ -242,6 +265,14 @@ class HomeFragment : Fragment(), WelcomeTutorialDialog.TutorialHost {
                         binding.tvStatTotalCount.text = total.toString()
                         binding.tvStatAvgScore.text = String.format(Locale.US, "%.1f", avg)
                         binding.tvStatPendingCount.text = pending.toString()
+                        val performancePercent = ((avg / 9.0) * 100.0).coerceIn(0.0, 100.0)
+                        binding.tvPrimaryMetric.text = String.format(Locale.US, "%.1f%%", performancePercent)
+                        binding.tvPrimaryContext.text = if (total == 0) {
+                            "Sin evaluaciones registradas"
+                        } else {
+                            "$total ${if (total == 1) "evaluación registrada" else "evaluaciones registradas"}"
+                        }
+                        binding.primaryMetricProgress.setProgressCompat(performancePercent.toInt(), true)
                         val isTrulyEmpty = realEvaluations.isEmpty()
                         binding.emptyState.visibility = if (isTrulyEmpty) View.VISIBLE else View.GONE
                         binding.rvEvaluations.visibility = if (isTrulyEmpty) View.GONE else View.VISIBLE

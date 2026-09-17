@@ -2,7 +2,6 @@ package com.example.minicex
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -15,17 +14,13 @@ import androidx.lifecycle.lifecycleScope
 import com.example.minicex.databinding.ActivityXlsViewerBinding
 import com.example.minicex.data.remote.dto.*
 import com.example.minicex.data.remote.RetrofitClient
+import com.example.minicex.utils.FileExporter
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.io.File
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class XlsViewerActivity : AppCompatActivity() {
 
@@ -33,9 +28,9 @@ class XlsViewerActivity : AppCompatActivity() {
     private var dataType: String = "teacher_summary"
     private var teacherSummary: TeacherSummaryResponse? = null
     private var studentReport: StudentReportResponse? = null
-    private var evaluadorId: Int = -1
+    private var evaluadorEmail: String = ""
     private var modo: String = "mine"
-    private var studentId: Int = -1
+    private var studentUuid: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +48,9 @@ class XlsViewerActivity : AppCompatActivity() {
 
         // Parse data
         dataType = intent.getStringExtra("data_type") ?: "teacher_summary"
-        evaluadorId = intent.getIntExtra("evaluador_id", -1)
+        evaluadorEmail = intent.getStringExtra("evaluador_email") ?: ""
         modo = intent.getStringExtra("modo") ?: "mine"
-        studentId = intent.getIntExtra("student_id", -1)
+        studentUuid = intent.getStringExtra("student_uuid") ?: ""
 
         when (dataType) {
             "student_report" -> {
@@ -184,7 +179,7 @@ class XlsViewerActivity : AppCompatActivity() {
         for (a in alumnos) {
             val evals = a.evaluaciones ?: continue
             evals.forEachIndexed { ei, ev ->
-                val detalles = ev.detalles ?: return@forEachIndexed
+                val detalles = ev.detalles
                 if (detalles.isEmpty()) return@forEachIndexed
                 totalRubrics++
                 sb.append("<h3>${escHtml(a.nombreCompleto)} · Eval #${ei+1} — ${escHtml(ev.fechaEvaluacion.take(10))}</h3><table><tr><th>Competencia</th><th>Puntaje</th><th>Notas</th><th>A destacar</th><th>A mejorar</th></tr>")
@@ -269,7 +264,7 @@ class XlsViewerActivity : AppCompatActivity() {
         sb.append("<h3>Detalle de Rúbricas</h3>")
         var totalR = 0
         evals.forEachIndexed { ei, ev ->
-            val detalles = ev.detalles ?: return@forEachIndexed
+            val detalles = ev.detalles
             if (detalles.isEmpty()) return@forEachIndexed
             totalR++
             sb.append("<h4 style=\"color:#94a3b8;font-size:12px;margin:8px 0 4px\">Eval #${ei+1} — ${escHtml(ev.fechaEvaluacion.take(10))}</h4>")
@@ -348,35 +343,41 @@ h4{color:#94a3b8;font-size:12px;margin:8px 0 4px}
 
     private fun downloadXlsxDirect() {
         Toast.makeText(this, "Descargando reporte…", Toast.LENGTH_SHORT).show()
-        val baseUrl = RetrofitClient.BASE_URL.trimEnd('/')
-        val url = when (dataType) {
-            "student_report" -> "$baseUrl/reports/student/download-xlsx?student_id=${studentReport?.student?.idAlumno ?: studentId}"
-            else -> "$baseUrl/reports/teacher-summary/download-xlsx?evaluador_id=$evaluadorId&modo=$modo"
+        val fileName = when (dataType) {
+            "student_report" -> "ReporteAlumno_${timestamp()}.xlsx"
+            else -> "ReporteDocente_${timestamp()}.xlsx"
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val client = OkHttpClient.Builder()
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .build()
-                val req = Request.Builder().url(url).build()
-                val resp = client.newCall(req).execute()
-                val bytes = resp.body?.bytes()
-                if (bytes != null && bytes.isNotEmpty()) {
-                    val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-                    val dir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                    val prefix = when (dataType) { "student_report" -> "ReporteAlumno" else -> "ReporteDocente" }
-                    val file = File(dir, "${prefix}_${sdf.format(Date())}.xlsx")
-                    FileOutputStream(file).use { it.write(bytes) }
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@XlsViewerActivity,
-                            "Reporte guardado: ${file.name}", Toast.LENGTH_LONG).show()
+                val response = when (dataType) {
+                    "student_report" -> RetrofitClient.instance
+                        .downloadStudentXlsx(studentReport?.student?.uuid ?: studentUuid)
+                    else -> RetrofitClient.instance
+                        .downloadTeacherSummaryXlsx(evaluadorEmail, modo)
+                }
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    if (body != null) {
+                        val saved = FileExporter.saveAndOpen(
+                            this@XlsViewerActivity, body.bytes(), fileName, FileExporter.MIME_XLSX
+                        )
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@XlsViewerActivity,
+                                if (saved != null) "Reporte guardado: ${saved.name}" else "No se pudo guardar el reporte",
+                                Toast.LENGTH_LONG).show()
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@XlsViewerActivity,
+                                "Respuesta vacía del servidor", Toast.LENGTH_LONG).show()
+                        }
                     }
                 } else {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(this@XlsViewerActivity,
-                            "Respuesta vacía del servidor", Toast.LENGTH_LONG).show()
+                            "Error: " + FileExporter.serverMessage(response.errorBody(), "No se pudo descargar el reporte"),
+                            Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
@@ -388,6 +389,11 @@ h4{color:#94a3b8;font-size:12px;margin:8px 0 4px}
         }
     }
 
+    private fun timestamp(): String =
+        SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onBackPressed() {
         super.onBackPressed()
         finish()

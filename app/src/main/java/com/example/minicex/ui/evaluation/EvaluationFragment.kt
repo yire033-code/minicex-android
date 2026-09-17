@@ -27,7 +27,10 @@ class EvaluationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = EvaluationPagerAdapter(this)
+        val adapter = EvaluationPagerAdapter(
+            this,
+            arguments?.getBoolean("open_student_registration") == true,
+        )
         binding.viewPager.adapter = adapter
         binding.viewPager.isUserInputEnabled = false // Disable swiping to force button use
 

@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Evaluación de Rúbricas"
-                android:textSize="22sp"
+                android:textSize="24sp"
                 android:textColor="@color/on_surface"
                 android:textStyle="bold" />
 

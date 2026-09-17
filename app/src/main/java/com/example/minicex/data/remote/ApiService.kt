@@ -1,10 +1,13 @@
 package com.example.minicex.data.remote
 
 import com.example.minicex.data.remote.dto.*
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
+import retrofit2.http.Streaming
 
 interface ApiService {
     @GET("students")
@@ -43,6 +46,40 @@ interface ApiService {
         @retrofit2.http.Query("evaluador_id") evaluadorId: Int,
         @retrofit2.http.Query("modo") modo: String = "mine"
     ): Response<TeacherSummaryResponse>
+
+    @GET("update")
+    suspend fun checkForUpdates(): Response<AppUpdateDto>
+
+    // ── Export endpoints (server-generated files, online-only) ────────────
+
+    // PDF oficial de evaluación por UUID
+    @Streaming
+    @GET("reports/evaluation/download-pdf")
+    suspend fun downloadEvaluationPdf(
+        @Query("uuid") uuid: String,
+        @Query("download") download: Int = 1
+    ): Response<ResponseBody>
+
+    // Excel (.xlsx) del historial del alumno por UUID
+    @Streaming
+    @GET("reports/student/download-xlsx")
+    suspend fun downloadStudentXlsx(
+        @Query("uuid") uuid: String
+    ): Response<ResponseBody>
+
+    // Excel (.xlsx) consolidado por docente usando su EMAIL
+    @Streaming
+    @GET("reports/teacher-summary/download-xlsx")
+    suspend fun downloadTeacherSummaryXlsx(
+        @Query("email") email: String,
+        @Query("modo") modo: String = "mine"
+    ): Response<ResponseBody>
+
+    // CSV plano del resumen del docente usando su EMAIL
+    @Streaming
+    @GET("reports/teacher-summary/export")
+    suspend fun downloadTeacherSummaryCsv(
+        @Query("email") email: String,
+        @Query("modo") modo: String = "mine"
+    ): Response<ResponseBody>
 }
-
-

@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Datos Generales"
-                android:textSize="22sp"
+                android:textSize="24sp"
                 android:textColor="@color/on_surface"
                 android:textStyle="bold" />
 
@@ -54,8 +54,8 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="2dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/card_border"
             app:cardBackgroundColor="@color/card_bg"
@@ -173,8 +173,8 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="2dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/card_border"
             app:cardBackgroundColor="@color/card_bg"
